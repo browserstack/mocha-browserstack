@@ -3,17 +3,39 @@ var config = {
     'browserstack.user': process.env.BROWSERSTACK_USERNAME || 'BROWSERSTACK_USERNAME',
     'browserstack.key': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
     'build': 'mocha-browserstack',
-    'name': 'parallel_test',
     'browserstack.debug': 'true',
   },
   'multiCapabilities': [{
-      'browserName': 'Chrome'
-    },{
-      'browserName': 'Safari'
-    },{
-      'browserName': 'Firefox'
-    },{
-      'browserName': 'IE'
+      'os_version': '10',
+      'browserName': 'Chrome',
+      'browser_version': 'latest',
+      'os': 'Windows',
+      'name': 'Parallel test 1'
+    },
+    {
+      'os_version': 'Monterey',
+      'browserName': 'Chrome',
+      'browser_version': 'latest',
+      'os': 'OS X',
+      'name': 'Parallel test 2'
+    },
+    {
+      'os_version' : 'Big Sur',
+      'browserName' : 'Safari',
+      'os' : 'OS X',
+      'name': 'Parallel test 3'
+    },
+    {
+      'browserName': 'Android',
+      'device': 'Samsung Galaxy S20',
+      'realMobile': 'true',
+      'name': 'Parallel test 4'
+    },
+    {
+      'browserName': 'iPhone',
+      'device': 'iPhone 12 Pro Max',
+      'realMobile': 'true',
+      'name': 'Parallel test 5'
   }]
 };
 
