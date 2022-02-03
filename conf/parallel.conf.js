@@ -6,23 +6,23 @@ var config = {
     'browserstack.debug': 'true',
   },
   'multiCapabilities': [{
+      'os': 'Windows',
       'os_version': '10',
       'browserName': 'Chrome',
       'browser_version': 'latest',
-      'os': 'Windows',
       'name': 'Parallel test 1'
     },
     {
+      'os': 'OS X',
       'os_version': 'Monterey',
       'browserName': 'Chrome',
       'browser_version': 'latest',
-      'os': 'OS X',
       'name': 'Parallel test 2'
     },
     {
+      'os' : 'OS X',
       'os_version' : 'Big Sur',
       'browserName' : 'Safari',
-      'os' : 'OS X',
       'name': 'Parallel test 3'
     },
     {
