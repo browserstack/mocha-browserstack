@@ -27,9 +27,21 @@ describe('BrowserStack Local Testing for ' + caps.browserName, function() {
 
   it('check tunnel is working', function (done) {
     driver.get('http://bs-local.com:45691/check').then(function() {
-      driver.getPageSource().then(function(source) {
-        assert(source.match(/Up and running/i) != null);
-        done();
+      driver.getPageSource().then(async function(source) {
+        try {
+          assert(source.match(/Up and running/i) != null);
+          //marking the test as Passed if source matches
+          await driver.executeScript(
+            'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed","reason": "Source matches!"}}'
+          );
+          done();
+        } catch (e) {
+          //marking the test as Failed if source does not match
+          console.log("Error:", e.message)
+          await driver.executeScript(
+            'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "Localhost failed to connect."}}'
+          );
+        }
       });
     });
   });
