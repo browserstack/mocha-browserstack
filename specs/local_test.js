@@ -34,13 +34,14 @@ describe('BrowserStack Local Testing for ' + caps.browserName, function() {
           await driver.executeScript(
             'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed","reason": "Source matches!"}}'
           );
-          done();
         } catch (e) {
           //marking the test as Failed if source does not match
           console.log("Error:", e.message)
           await driver.executeScript(
             'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "Localhost failed to connect."}}'
           );
+        } finally {
+          done();
         }
       });
     });
