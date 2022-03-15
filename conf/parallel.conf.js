@@ -1,5 +1,5 @@
 var config = {
-  'commanCapabilities': {
+  'commonCapabilities': {
     'userName': process.env.BROWSERSTACK_USERNAME || 'BROWSERSTACK_USERNAME',
     'accessKey': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
     'buildName': 'mocha-browserstack',
@@ -52,7 +52,7 @@ var config = {
 exports.capabilities = [];
 // Code to support common capabilities
 config.multiCapabilities.forEach(function(caps) {
-  var temp_caps = JSON.parse(JSON.stringify(config.commanCapabilities));
+  var temp_caps = JSON.parse(JSON.stringify(config.commonCapabilities));
   caps['bstack:options'] = {
     ...caps['bstack:options'],
     ...temp_caps
