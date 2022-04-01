@@ -9,7 +9,7 @@ var capabilities = require('../' + conf_file).capabilities;
 var buildDriver = function(caps) {
   return new Promise(function(resolve, reject) {
     var driver = new webdriver.Builder().
-      usingServer('https://hub-cloud.browserstack.com/wd/hub').
+      usingServer('https://hub.browserstack.com/wd/hub').
       withCapabilities(caps).
       build();
     resolve(driver);
