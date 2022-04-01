@@ -13,30 +13,17 @@ var config = {
       'name': 'Parallel test 1'
     },
     {
-      'os': 'OS X',
-      'os_version': 'Monterey',
-      'browserName': 'Chrome',
-      'browser_version': 'latest',
-      'name': 'Parallel test 2'
-    },
-    {
       'os' : 'OS X',
       'os_version' : 'Big Sur',
       'browserName' : 'Safari',
-      'name': 'Parallel test 3'
+      'name': 'Parallel test 2'
     },
     {
       'browserName': 'Android',
       'device': 'Samsung Galaxy S20',
       'realMobile': 'true',
-      'name': 'Parallel test 4'
-    },
-    {
-      'browserName': 'iPhone',
-      'device': 'iPhone 12 Pro Max',
-      'realMobile': 'true',
-      'name': 'Parallel test 5'
-  }]
+      'name': 'Parallel test 3'
+    }]
 };
 
 exports.capabilities = [];
