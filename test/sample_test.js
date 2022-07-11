@@ -1,7 +1,7 @@
 var assert = require('assert');
 const { Builder, By, Capabilities, until } = require("selenium-webdriver");
 
-var buildDriver = async function() {
+var buildDriver = function() {
   return new Builder().
     usingServer('http://localhost:4444/wd/hub').
     withCapabilities(Capabilities.chrome()).
@@ -12,8 +12,8 @@ describe('BrowserStack\'s Cart Functionality', async function() {
   this.timeout(0);
   var driver;
 
-  beforeEach(async function() {
-    driver = await buildDriver();
+  before(function() {
+    driver = buildDriver();
   });
 
   it('can add items to cart', async function () {
@@ -36,7 +36,7 @@ describe('BrowserStack\'s Cart Functionality', async function() {
     assert(productText === productCartText);
   });
 
-  afterEach(async function() {
+  after(async function() {
     await driver.quit();
   });
 });
