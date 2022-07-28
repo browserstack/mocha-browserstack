@@ -11,7 +11,7 @@ var buildDriver = function(caps) {
     build();
 };
 
-describe('BrowserStack\'s Cart Functionality for ' + caps.browserName, function() {
+describe('BStack Cart Functionality for ' + caps.browserName, function() {
   this.timeout(0);
   var driver;
 
