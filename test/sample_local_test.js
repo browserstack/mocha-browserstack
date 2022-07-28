@@ -1,7 +1,7 @@
 var assert = require('assert');
 const { Builder, Capabilities } = require("selenium-webdriver");
 
-var buildDriver = async function() {
+var buildDriver = function() {
   return new Builder().
     usingServer('http://localhost:4444/wd/hub').
     withCapabilities(Capabilities.chrome()).
@@ -12,8 +12,8 @@ describe('BrowserStack Local Testing', async function() {
   this.timeout(0);
   var driver;
 
-  beforeEach(async function() {
-    driver = await buildDriver();
+  before(function() {
+    driver = buildDriver();
   });
 
   it('check tunnel is working', async function () {
@@ -22,7 +22,7 @@ describe('BrowserStack Local Testing', async function() {
     assert(source.match(/Up and running/i) != null);
   });
 
-  afterEach(async function() {
+  after(async function() {
     await driver.quit();
   });
 });
