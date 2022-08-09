@@ -1,41 +1,51 @@
 var config = {
   'commonCapabilities': {
-    'browserstack.user': process.env.BROWSERSTACK_USERNAME || 'BROWSERSTACK_USERNAME',
-    'browserstack.key': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
-    'build': 'mocha-browserstack',
-    'browserstack.debug': 'true',
+    'userName': process.env.BROWSERSTACK_USERNAME || 'BROWSERSTACK_USERNAME',
+    'accessKey': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
+    'buildName': 'mocha-browserstack',
+    'debug': 'true',
   },
   'multiCapabilities': [{
-      'os': 'Windows',
-      'os_version': '10',
       'browserName': 'Chrome',
-      'browser_version': 'latest',
-      'name': 'Parallel test 1'
+      'browserVersion': 'latest',
+      'bstack:options': {
+        'os': 'Windows',
+        'osVersion': '10',
+        'sessionName': 'Parallel test 1'
+      }
     },
     {
-      'os': 'OS X',
-      'os_version': 'Monterey',
       'browserName': 'Chrome',
-      'browser_version': 'latest',
-      'name': 'Parallel test 2'
+      'browserVersion': 'latest',
+      'bstack:options': {
+        'os': 'OS X',
+        'osVersion': 'Monterey',
+        'sessionName': 'Parallel test 2'
+      }
     },
     {
-      'os' : 'OS X',
-      'os_version' : 'Big Sur',
       'browserName' : 'Safari',
-      'name': 'Parallel test 3'
+      'bstack:options': {
+        'os' : 'OS X',
+        'osVersion' : 'Big Sur',
+        'sessionName': 'Parallel test 3'
+      }
     },
     {
       'browserName': 'Android',
-      'device': 'Samsung Galaxy S20',
-      'realMobile': 'true',
-      'name': 'Parallel test 4'
+      'bstack:options': {
+        'deviceName': 'Samsung Galaxy S20',
+        'realMobile': 'true',
+        'sessionName': 'Parallel test 4'
+      }
     },
     {
       'browserName': 'iPhone',
-      'device': 'iPhone 12 Pro Max',
-      'realMobile': 'true',
-      'name': 'Parallel test 5'
+      'bstack:options': {
+        'deviceName': 'iPhone 12 Pro Max',
+        'realMobile': 'true',
+        'sessionName': 'Parallel test 5'
+      }
   }]
 };
 
@@ -43,6 +53,9 @@ exports.capabilities = [];
 // Code to support common capabilities
 config.multiCapabilities.forEach(function(caps) {
   var temp_caps = JSON.parse(JSON.stringify(config.commonCapabilities));
-  for(var i in caps) temp_caps[i] = caps[i];
-  exports.capabilities.push(temp_caps);
+  caps['bstack:options'] = {
+    ...caps['bstack:options'],
+    ...temp_caps
+  };
+  exports.capabilities.push(caps);
 });

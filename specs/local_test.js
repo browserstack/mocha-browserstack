@@ -18,7 +18,7 @@ describe('BrowserStack Local Testing for ' + caps.browserName, function() {
 
   beforeEach(function(done) {
     bsLocal = new browserstack.Local();
-    bsLocal.start({ 'key': caps['browserstack.key'] }, function(error) {
+    bsLocal.start({ 'key': caps['bstack:options'].accessKey }, function(error) {
       if (error) done(error);
       driver = buildDriver(caps);
       done();
