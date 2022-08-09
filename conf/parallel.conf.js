@@ -16,7 +16,7 @@ var config = {
     },
     {
       'browserName': 'Chrome',
-      'browser_version': 'latest',
+      'browserVersion': 'latest',
       'bstack:options': {
         'os': 'OS X',
         'osVersion': 'Monterey',
