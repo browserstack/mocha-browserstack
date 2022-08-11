@@ -8,7 +8,7 @@ var buildDriver = function() {
     build();
 };
 
-describe('BrowserStack\'s Cart Functionality', async function() {
+describe('BStack\'s Cart Functionality', async function() {
   this.timeout(0);
   var driver;
 
