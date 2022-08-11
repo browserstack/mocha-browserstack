@@ -8,7 +8,7 @@ var buildDriver = function() {
     build();
 };
 
-describe('BrowserStack Local Testing', async function() {
+describe('BStack Local Testing', async function() {
   this.timeout(0);
   var driver;
 
