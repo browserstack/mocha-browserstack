@@ -4,6 +4,7 @@ var config = {
     'accessKey': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
     'buildName': 'mocha-browserstack',
     'debug': 'true',
+    'source': 'mocha:sample-selenium-4-v1.0'
   },
   'multiCapabilities': [{
       'browserName': 'Chrome',

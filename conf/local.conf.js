@@ -6,6 +6,7 @@ exports.capabilities = {
 	'buildName': 'mocha-browserstack',
 	'sessionName': 'local_test',
 	'debug': 'true',
+  'source': 'mocha:sample-selenium-4-v1.0',
     'local': true
   }
 };
