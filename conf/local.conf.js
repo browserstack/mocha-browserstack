@@ -4,7 +4,7 @@ exports.capabilities = {
     'userName': process.env.BROWSERSTACK_USERNAME || 'BROWSERSTACK_USERNAME',
     'accessKey': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
     'buildName': 'browserstack-build-1',
-    'sessionName': 'Bstack local mocha',
+    'sessionName': 'BStack local mocha',
     'debug': 'true',
     'source': 'mocha:sample-selenium-4-v1.0',
     'local': true
