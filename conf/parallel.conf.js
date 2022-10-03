@@ -12,7 +12,7 @@ var config = {
       'bstack:options': {
         'os': 'Windows',
         'osVersion': '10',
-        'sessionName': 'Parallel test 1'
+        'sessionName': 'BStack parallel mocha'
       }
     },
     {
@@ -21,7 +21,7 @@ var config = {
       'bstack:options': {
         'os': 'OS X',
         'osVersion': 'Monterey',
-        'sessionName': 'Parallel test 2'
+        'sessionName': 'BStack parallel mocha'
       }
     },
     {
@@ -29,7 +29,7 @@ var config = {
       'bstack:options': {
         'os' : 'OS X',
         'osVersion' : 'Big Sur',
-        'sessionName': 'Parallel test 3'
+        'sessionName': 'BStack parallel mocha'
       }
     },
     {
@@ -37,7 +37,7 @@ var config = {
       'bstack:options': {
         'deviceName': 'Samsung Galaxy S20',
         'realMobile': 'true',
-        'sessionName': 'Parallel test 4'
+        'sessionName': 'BStack parallel mocha'
       }
     },
     {
@@ -45,7 +45,7 @@ var config = {
       'bstack:options': {
         'deviceName': 'iPhone 12 Pro Max',
         'realMobile': 'true',
-        'sessionName': 'Parallel test 5'
+        'sessionName': 'BStack parallel mocha5'
       }
   }]
 };
