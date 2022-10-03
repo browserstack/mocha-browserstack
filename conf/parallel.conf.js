@@ -2,7 +2,7 @@ var config = {
   'commonCapabilities': {
     'browserstack.user': process.env.BROWSERSTACK_USERNAME || 'BROWSERSTACK_USERNAME',
     'browserstack.key': process.env.BROWSERSTACK_ACCESS_KEY || 'BROWSERSTACK_ACCESS_KEY',
-    'build': 'mocha-browserstack',
+    'build': 'browserstack-build-1',
     'browserstack.source': 'mocha:sample-selenium-3-v1.0',
     'browserstack.debug': 'true',
   },
@@ -11,32 +11,32 @@ var config = {
       'os_version': '10',
       'browserName': 'Chrome',
       'browser_version': 'latest',
-      'name': 'Parallel test 1'
+      'name': 'BStack parallel mocha'
     },
     {
       'os': 'OS X',
       'os_version': 'Monterey',
       'browserName': 'Chrome',
       'browser_version': 'latest',
-      'name': 'Parallel test 2'
+      'name': 'BStack parallel mocha'
     },
     {
       'os' : 'OS X',
       'os_version' : 'Big Sur',
       'browserName' : 'Safari',
-      'name': 'Parallel test 3'
+      'name': 'BStack parallel mocha'
     },
     {
       'browserName': 'Android',
       'device': 'Samsung Galaxy S20',
       'realMobile': 'true',
-      'name': 'Parallel test 4'
+      'name': 'BStack parallel mocha'
     },
     {
       'browserName': 'iPhone',
       'device': 'iPhone 12 Pro Max',
       'realMobile': 'true',
-      'name': 'Parallel test 5'
+      'name': 'BStack parallel mocha'
   }]
 };
 
