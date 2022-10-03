@@ -6,6 +6,5 @@ exports.capabilities = {
     'buildName': 'browserstack-build-1',
     'sessionName': 'BStack single mocha',
     'debug': 'true',
-    'source': 'mocha:sample-selenium-4-v1.0'
   }
 };
