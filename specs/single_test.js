@@ -3,6 +3,7 @@ var assert = require('assert'),
   conf_file = process.argv[3] || 'conf/single.conf.js';
   
 var caps = require('../' + conf_file).capabilities;
+caps['browserstack.source'] = 'mocha:sample-selenium-3:v1.0';
 
 var buildDriver = function(caps) {
   return new webdriver.Builder().
