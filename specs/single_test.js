@@ -7,7 +7,7 @@ caps['bstack:options'].source = 'mocha:sample-selenium-4:v1.0';
 
 var buildDriver = function(caps) {
   return new webdriver.Builder().
-    usingServer('https://hub-cloud.browserstack.com/wd/hub').
+    usingServer('https://hub.browserstack.com/wd/hub').
     withCapabilities(caps).
     build();
 };
