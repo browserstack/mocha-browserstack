@@ -44,7 +44,7 @@ var config = {
       'bstack:options': {
         'deviceName': 'iPhone 12 Pro Max',
         'realMobile': 'true',
-        'sessionName': 'BStack parallel mocha5'
+        'sessionName': 'BStack parallel mocha'
       }
   }]
 };
