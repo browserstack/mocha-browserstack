@@ -5,12 +5,12 @@ var assert = require('assert'),
   Promise = require('bluebird');
 
 var capabilities = require('../' + conf_file).capabilities;
-caps['browserstack.source'] = 'mocha:sample-selenium-3:v1.0';
 
 var buildDriver = function(caps) {
+  capabilities['browserstack.source'] = 'mocha:sample-selenium-3:v1.0';
   return new Promise(function(resolve, reject) {
     var driver = new webdriver.Builder().
-      usingServer('https://hub-cloud.browserstack.com/wd/hub').
+      usingServer('https://hub.browserstack.com/wd/hub').
       withCapabilities(caps).
       build();
     resolve(driver);
