@@ -17,9 +17,9 @@ describe('BStack Local Testing', async function() {
   });
 
   it('check tunnel is working', async function () {
-    await driver.get('http://bs-local.com:45691/check');
-    let source = await driver.getPageSource();
-    assert(source.match(/Up and running/i) != null);
+    await driver.get('http://bs-local.com:45454/');
+    let title = await driver.getTitle();
+    assert(title.match(/BrowserStack Local/i) != null);
   });
 
   after(async function() {
