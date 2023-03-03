@@ -4,7 +4,8 @@
   "description": " Selenium examples for Mocha and BrowserStack Automate",
   "scripts": {
     "sample-test": "browserstack-node-sdk mocha test/sample_test.js --timeout=60000",
-    "sample-local-test": "browserstack-node-sdk mocha test/sample_local_test.js --timeout=60000"
+    "sample-local-test": "browserstack-node-sdk mocha test/sample_local_test.js --timeout=60000",
+    "postinstall": "npm update browserstack-node-sdk"
   },
   "repository": {
     "type": "git",
