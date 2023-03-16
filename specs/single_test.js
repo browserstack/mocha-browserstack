@@ -1,3 +1,4 @@
+const https = require("https");
 var assert = require('assert'),
   webdriver = require('selenium-webdriver'),
   conf_file = process.argv[3] || 'conf/single.conf.js';
@@ -7,9 +8,15 @@ caps['browserstack.source'] = 'mocha:sample-selenium-3:v1.0';
 
 var buildDriver = function(caps) {
   return new webdriver.Builder().
-    usingServer('https://hub.browserstack.com/wd/hub').
-    withCapabilities(caps).
-    build();
+    usingServer('https://hub.browserstack.com/wd/hub')
+    .withCapabilities(caps)
+    .usingHttpAgent(
+      new https.Agent({
+        keepAlive: true,
+        keepAliveMsecs: 1000000,
+      })
+    )
+    .build();
 };
 
 describe('BStack Cart Functionality for ' + caps.browserName, function() {

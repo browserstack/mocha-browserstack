@@ -1,16 +1,23 @@
+const https = require("https");
 var assert = require('assert'),
   browserstack = require('browserstack-local'),
   webdriver = require('selenium-webdriver'),
   conf_file = process.argv[3] || 'conf/local.conf.js';
-  
+
 var caps = require('../' + conf_file).capabilities;
 caps['browserstack.source'] = 'mocha:sample-selenium-3:v1.0';
 
 var buildDriver = function(caps) {
-  return new webdriver.Builder().
-    usingServer('https://hub.browserstack.com/wd/hub').
-    withCapabilities(caps).
-    build();
+  return new webdriver.Builder()
+    .usingServer("https://hub.browserstack.com/wd/hub")
+    .withCapabilities(caps)
+    .usingHttpAgent(
+      new https.Agent({
+        keepAlive: true,
+        keepAliveMsecs: 1000000,
+      })
+    )
+    .build();
 };
 
 describe('BrowserStack Local Testing for ' + caps.browserName, function() {
