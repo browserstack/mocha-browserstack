@@ -1,3 +1,4 @@
+const https = require("https");
 var assert = require('assert'),
   webdriver = require('selenium-webdriver'),
   conf_file = process.argv[3] || 'conf/single.conf.js',
@@ -9,10 +10,16 @@ var capabilities = require('../' + conf_file).capabilities;
 var buildDriver = function(caps) {
   caps['bstack:options'].source = 'mocha:sample-selenium-4:v1.0';
   return new Promise(function(resolve, reject) {
-    var driver = new webdriver.Builder().
-      usingServer('https://hub.browserstack.com/wd/hub').
-      withCapabilities(caps).
-      build();
+    var driver = new webdriver.Builder()
+      .usingServer('https://hub.browserstack.com/wd/hub')
+      .withCapabilities(caps)
+      .usingHttpAgent(
+        new https.Agent({
+          keepAlive: true,
+          keepAliveMsecs: 1000000,
+        })
+      )
+      .build();
     resolve(driver);
   });
 };
