@@ -13,8 +13,7 @@
 * Update `*.conf.js` files inside the `conf/` directory with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings)
 
 ## Running your tests
-* To run a single test, run `npm run single`
-* To run parallel tests, run `npm run parallel`
+* To run tests, run `npm run parallel`
 * To run local tests, run `npm run local`
 
 
