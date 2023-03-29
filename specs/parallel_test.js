@@ -8,7 +8,7 @@ var assert = require('assert'),
 var capabilities = require('../' + conf_file).capabilities;
 
 var buildDriver = function(caps) {
-  caps['bstack:options'].source = 'mocha:sample-selenium-4:v1.0';
+  caps['bstack:options'].source = 'mocha:sample-selenium-4:v1.1';
   return new Promise(function(resolve, reject) {
     var driver = new webdriver.Builder()
       .usingServer('https://hub.browserstack.com/wd/hub')

@@ -5,7 +5,7 @@ var assert = require('assert'),
   conf_file = process.argv[3] || 'conf/local.conf.js';
   
 var caps = require('../' + conf_file).capabilities;
-caps['bstack:options'].source = 'mocha:sample-selenium-4:v1.0';
+caps['bstack:options'].source = 'mocha:sample-selenium-4:v1.1';
 
 var buildDriver = function(caps) {
   return new webdriver.Builder()
