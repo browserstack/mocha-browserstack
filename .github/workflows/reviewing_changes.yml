@@ -1,14 +1,19 @@
-#This job tests changes made in master branch against PRs.
+# This job is to test different npm profiles in master branch against Pull Request raised
+# This workflow targets mocha
 
-name: Review changes from PRs
-run-name: ${{ github.actor }} has created/updated a PR
+name: Mocha SDK Test workflow for Maven on comment RUN_TESTS
+
 on:
-  pull_request:
+  issue_comment:
     branches: [ master ]
+    types: [ created ]
 
 jobs:
-  build:
+  comment-run:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, 'RUN_TESTS')
+    continue-on-error: true
     strategy:
+      max-parallel: 1
       matrix:
         version: [ 14, 16, 18 ]
         os: [ macos-latest, windows-latest, ubuntu-latest ]
@@ -20,6 +25,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/head
+      - uses: actions/github-script@v6
+        id: check-membership
+        with:
+          script: |
+            const creator = context.payload.sender.login
+            const result = await github.rest.teams.getMembershipForUserInOrg({
+              org: context.repo.owner,
+              team_slug: 'asi-devs',
+              username: creator
+            })
+            console.log(`The comment creator ${creator} membership - ${result}`)
+            if (response.state === "active") {
+                return "true"
+            }
+            core.setFailed('User is not part of the owner team!')
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.version }}

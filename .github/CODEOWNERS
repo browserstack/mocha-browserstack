@@ -1,1 +1,1 @@
-*.yml @browserstack/asi-devs
+.github/workflows/*.yml @browserstack/asi-devs
