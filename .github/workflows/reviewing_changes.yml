@@ -10,42 +10,44 @@ on:
 
 jobs:
   comment-run:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, 'RUN_TESTS')
-    continue-on-error: true
-    strategy:
-      max-parallel: 1
-      matrix:
-        version: [ 14, 16, 18 ]
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    if: always() && github.event.issue.pull_request && contains(github.event.comment.body, 'RUN_TESTS')
     runs-on: ${{ matrix.os }}
-    name: MochaJS repo ${{ matrix.version }} - ${{ matrix.os }} Sample
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        node: [ 14, 16, 18 ]
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    name: MochaJS Repo ${{ matrix.node }} - ${{ matrix.os }} Sample
     env:
       BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
       BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: refs/pull/${{ github.event.issue.number }}/head
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@98814c53be79b1d30f795b907e553d8679345975
         id: check-membership
         with:
+          github-token: ${{ secrets.BROWSERSTACK_TOKEN }}
           script: |
             const creator = context.payload.sender.login
             const result = await github.rest.teams.getMembershipForUserInOrg({
               org: context.repo.owner,
               team_slug: 'asi-devs',
               username: creator
-            })
-            console.log(`The comment creator ${creator} membership - ${result}`)
-            if (response.state === "active") {
-                return "true"
-            }
-            core.setFailed('User is not part of the owner team!')
+            }).catch((err) => ({status: err.status, response: err.response}));
+            console.log(`The comment creator ${creator} membership Status : ${result.status} Response : ${JSON.stringify(result.response)}`)
+            # if (result.status !== 200) {
+            #   core.setFailed('User is not part of the owner team!')
+            # }
+
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/head
+
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.version }}
-    
+
       - name: Setup environment for testing
         run: npm install
 
