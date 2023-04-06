@@ -36,9 +36,9 @@ jobs:
               username: creator
             }).catch((err) => ({status: err.status, response: err.response}));
             console.log(`The comment creator ${creator} membership Status : ${result.status} Response : ${JSON.stringify(result.response)}`)
-            # if (result.status !== 200) {
-            #   core.setFailed('User is not part of the owner team!')
-            # }
+            if (result.status !== 200) {
+              core.setFailed('User is not part of the owner team!')
+            }
 
       - uses: actions/checkout@v3
         with:
