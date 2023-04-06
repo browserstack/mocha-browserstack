@@ -1,7 +1,7 @@
 # This job is to test different npm profiles in master branch against Pull Request raised
 # This workflow targets mocha
 
-name: Mocha SDK Test workflow for Maven on comment RUN_TESTS
+name: Mocha SDK Test workflow for Node on comment RUN_TESTS
 
 on:
   issue_comment:
