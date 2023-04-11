@@ -1,7 +1,7 @@
 # This job is to test different npm profiles in main branch against Pull Requests raised
 # This workflow targets mocha-js
 
-name: Mocha-js Test workflow for Node from workflow_dispatch
+name: NodeJS SDK Test workflow on workflow_dispatch
 
 on:
   workflow_dispatch:
