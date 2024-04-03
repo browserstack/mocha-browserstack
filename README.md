@@ -9,7 +9,7 @@
 ## Run sample build
 
 ---
-- Clone the repo
+- Clone the repo 
 - Install dependencies `npm install`
 - Set your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings) in [browserstack.yml](browserstack.yml) `npx setup --username userName --key accessKey`
 - To run sample test, run `npm run sample-test` or `yarn run sample-test`
