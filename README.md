@@ -18,9 +18,9 @@
    - run `npm run sample-local-test` or `yarn run sample-local-test`
 
 ## Integrate your test suite
-
+Integrate BrowserStack into your existing Mocha test suite using BrowserStack Node SDK — a plug-and-play solution that takes care of all the integration steps for you!
 ---
-1. Install browserstack-node-sdk as a dev-dependency
+1. Install browserstack-node-sdk as a dev-dependency in your mocha project
 ```
 npm i -D browserstack-node-sdk
 or
@@ -30,8 +30,8 @@ yarn add --dev browserstack-node-sdk
 ```
 npx setup --username userName --key accessKey
 ```
-  * Adds a browserstack.yml file at root of your mocha project with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
-  * Adds a new command for running tests on browserstack in scripts tag of package.json,
+  * Adds a browserstack.yml file at root of your mocha project with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings). Adding `userName` and `accessKey` in the config is not required if you have set `env` variables.
+  * Adds a new command for running tests on browserstack in scripts property of package.json,
   ```
   "scripts": {
     "test": "mocha ...args",
