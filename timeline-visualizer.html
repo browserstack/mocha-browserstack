@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrowserStack SDK Performance Timeline</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .file-input {
+            margin-bottom: 15px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .timeline-container {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .timeline {
+            position: relative;
+            min-height: 400px;
+            border-left: 2px solid #dee2e6;
+            margin-left: 300px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-label {
+            position: absolute;
+            left: -280px;
+            width: 260px;
+            font-size: 12px;
+            color: #333;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .event-bar {
+            height: 20px;
+            border-radius: 10px;
+            position: relative;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 11px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .event-bar:hover {
+            transform: scaleY(1.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .event-instant {
+            width: 4px;
+            height: 20px;
+            border-radius: 2px;
+            background: #ff6b6b;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            border-radius: 6px;
+        }
+        
+        .time-axis {
+            position: relative;
+            height: 30px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .time-marker {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-left: 1px solid #ccc;
+            font-size: 10px;
+            color: #666;
+            padding-left: 2px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .filter-input {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BrowserStack SDK Performance Timeline</h1>
+            <p>Visualize performance events and execution flow</p>
+        </div>
+        
+        <div class="controls">
+            <div class="file-input">
+                <label for="logFile">Load run.log file:</label>
+                <input type="file" id="logFile" accept=".log,.txt" />
+                <button onclick="loadDefaultLog()">Load Default (run-with-session-timing.log)</button>
+            </div>
+            
+            <div class="file-input">
+                <label for="gapFile">Load gap analysis JSON file:</label>
+                <input type="file" id="gapFile" accept=".json" />
+            </div>
+            
+            <div id="error-container"></div>
+            
+            <div class="filter-controls">
+                <input type="text" id="eventFilter" class="filter-input" placeholder="Filter events (e.g., SDK:SETUP, REQUEST)" />
+                <select id="categoryFilter" class="filter-input">
+                    <option value="">All Categories</option>
+                    <option value="SDK">SDK Events</option>
+                    <option value="REQUEST">HTTP Requests</option>
+                    <option value="DRIVER">Driver Operations</option>
+                    <option value="A11Y">Accessibility</option>
+                    <option value="O11Y">Observability</option>
+                    <option value="AUTOMATE">Automate</option>
+                    <option value="TESTHUB">TestHub</option>
+                    <option value="GAP">Gaps</option>
+                </select>
+                <label><input type="checkbox" id="showInstantEvents" checked /> Show instant events</label>
+                <label><input type="checkbox" id="showGaps" checked /> Show gaps</label>
+            </div>
+            
+            <div class="stats" id="stats-container">
+                <!-- Stats will be populated here -->
+            </div>
+        </div>
+        
+        <div class="timeline-container">
+            <div id="timeline-content">
+                <p>Load a log file to see the timeline visualization</p>
+            </div>
+        </div>
+        
+        <div class="legend" id="legend-container">
+            <!-- Legend will be populated here -->
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        let events = [];
+        let filteredEvents = [];
+        let timelineStart = null;
+        let timelineEnd = null;
+        
+        const colors = {
+            'SDK': '#667eea',
+            'REQUEST': '#f093fb',
+            'DRIVER': '#4facfe',
+            'A11Y': '#43e97b',
+            'O11Y': '#fa709a',
+            'AUTOMATE': '#ffecd2',
+            'TESTHUB': '#fcb69f',
+            'HOOK': '#a8edea',
+            'CLEANUP': '#d299c2',
+            'GAP': '#ff6b6b',
+            'DEFAULT': '#95a5a6'
+        };
+        
+        let gapData = null;
+        let sessionStart = null;
+        let sessionEnd = null;
+        
+        function getEventCategory(eventName) {
+            if (eventName.startsWith('SDK:')) return 'SDK';
+            if (eventName.startsWith('REQUEST:')) return 'REQUEST';
+            if (eventName.includes('DRIVER')) return 'DRIVER';
+            if (eventName.includes('A11Y')) return 'A11Y';
+            if (eventName.includes('O11Y')) return 'O11Y';
+            if (eventName.includes('AUTOMATE')) return 'AUTOMATE';
+            if (eventName.includes('TESTHUB')) return 'TESTHUB';
+            if (eventName.includes('HOOK')) return 'HOOK';
+            if (eventName.includes('CLEANUP')) return 'CLEANUP';
+            return 'DEFAULT';
+        }
+        
+        function parseLogFile(content) {
+            const lines = content.split('\n');
+            const eventMap = new Map();
+            events = [];
+            
+            // Extract session start/end times
+            lines.forEach(line => {
+                const sessionStartMatch = line.match(/SDK SESSION STARTED AT (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/);
+                const sessionEndMatch = line.match(/SDK SESSION ENDED AT (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/);
+
+                if (sessionStartMatch) {
+                    sessionStart = new Date(sessionStartMatch[1]);
+                }
+                if (sessionEndMatch) {
+                    sessionEnd = new Date(sessionEndMatch[1]);
+                }
+
+                const match = line.match(/PERFORMANCE EVENT (STARTED|ENDED): (.+?) AT (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/);
+                if (match) {
+                    const [, type, eventName, timestamp] = match;
+                    const time = new Date(timestamp);
+                    
+                    if (type === 'STARTED') {
+                        eventMap.set(eventName, { 
+                            name: eventName, 
+                            start: time,
+                            category: getEventCategory(eventName)
+                        });
+                    } else if (type === 'ENDED') {
+                        const startEvent = eventMap.get(eventName);
+                        if (startEvent) {
+                            events.push({
+                                ...startEvent,
+                                end: time,
+                                duration: time - startEvent.start
+                            });
+                            eventMap.delete(eventName);
+                        }
+                    }
+                }
+            });
+            
+            // Add remaining started events as instant events
+            eventMap.forEach(event => {
+                events.push({
+                    ...event,
+                    end: event.start,
+                    duration: 0,
+                    isInstant: true
+                });
+            });
+            
+            events.sort((a, b) => a.start - b.start);
+            
+            if (events.length > 0) {
+                timelineStart = sessionStart || events[0].start;
+                timelineEnd = sessionEnd || events[events.length - 1].end || events[events.length - 1].start;
+            }
+            
+            applyFilters();
+            updateStats();
+            renderTimeline();
+            renderLegend();
+        }
+        
+        function applyFilters() {
+            const eventFilter = document.getElementById('eventFilter').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const showInstantEvents = document.getElementById('showInstantEvents').checked;
+            const showGaps = document.getElementById('showGaps').checked;
+            
+            filteredEvents = events.filter(event => {
+                if (!showInstantEvents && event.isInstant) return false;
+                if (!showGaps && event.category === 'GAP') return false;
+                if (eventFilter && !event.name.toLowerCase().includes(eventFilter)) return false;
+                if (categoryFilter && event.category !== categoryFilter) return false;
+                return true;
+            });
+        }
+        
+        function updateStats() {
+            const totalDuration = timelineEnd - timelineStart;
+            const nonGapEvents = events.filter(e => e.category !== 'GAP');
+            const avgDuration = nonGapEvents.filter(e => !e.isInstant).reduce((sum, e) => sum + e.duration, 0) / nonGapEvents.filter(e => !e.isInstant).length;
+            const longestEvent = nonGapEvents.reduce((max, e) => e.duration > max.duration ? e : max, {duration: 0});
+            
+            const categories = {};
+            events.forEach(event => {
+                categories[event.category] = (categories[event.category] || 0) + 1;
+            });
+
+            let coverageInfo = '';
+            let testRunTimeInfo = '';
+            
+            if (gapData && gapData.metadata) {
+                coverageInfo = `
+                    <div class="stat-card">
+                        <div class="stat-value">${gapData.metadata.coveragePercentage.toFixed(1)}%</div>
+                        <div class="stat-label">Event Coverage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${gapData.gaps.length}</div>
+                        <div class="stat-label">Gaps Found</div>
+                    </div>
+                `;
+            }
+            
+            // Calculate test run time from session start to session end
+            if (sessionStart && sessionEnd) {
+                const testRunTime = sessionEnd - sessionStart;
+                testRunTimeInfo = `
+                    <div class="stat-card" style="border-left-color: #28a745;">
+                        <div class="stat-value">${(testRunTime / 1000).toFixed(2)}s</div>
+                        <div class="stat-label">Total Test Run Time</div>
+                    </div>
+                `;
+            }
+            
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-value">${events.length}</div>
+                    <div class="stat-label">Total Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.round(totalDuration)}ms</div>
+                    <div class="stat-label">Timeline Duration</div>
+                </div>
+                ${testRunTimeInfo}
+                <div class="stat-card">
+                    <div class="stat-value">${Math.round(avgDuration || 0)}ms</div>
+                    <div class="stat-label">Avg Event Duration</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${longestEvent.name?.split(':')[1] || 'N/A'}</div>
+                    <div class="stat-label">Longest Event (${Math.round(longestEvent.duration || 0)}ms)</div>
+                </div>
+                ${coverageInfo}
+            `;
+            
+            document.getElementById('stats-container').innerHTML = statsHtml;
+        }
+        
+        function renderTimeline() {
+            if (filteredEvents.length === 0) {
+                document.getElementById('timeline-content').innerHTML = '<p>No events to display</p>';
+                return;
+            }
+            
+            const totalDuration = timelineEnd - timelineStart;
+            const timelineWidth = 800;
+            
+            let html = '<div class="time-axis">';
+            
+            // Add time markers
+            for (let i = 0; i <= 10; i++) {
+                const time = timelineStart.getTime() + (totalDuration * i / 10);
+                const position = (i / 10) * timelineWidth;
+                const timeStr = new Date(time).toLocaleTimeString('en-US', {
+                    hour12: false,
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                html += `<div class="time-marker" style="left: ${position}px">${timeStr}</div>`;
+            }
+            
+            html += '</div><div class="timeline">';
+            
+            filteredEvents.forEach((event, index) => {
+                const startOffset = ((event.start - timelineStart) / totalDuration) * timelineWidth;
+                const width = event.isInstant ? 4 : Math.max(2, (event.duration / totalDuration) * timelineWidth);
+                const color = colors[event.category] || colors.DEFAULT;
+                
+                const eventClass = event.isInstant ? 'event-instant' : 'event-bar';
+                const durationText = event.isInstant ? '' : `${Math.round(event.duration)}ms`;
+                
+                // Special styling for gaps
+                const gapClass = event.isGap ? ' style="opacity: 0.7; border: 2px dashed #fff;"' : '';
+                
+                html += `
+                    <div class="timeline-item">
+                        <div class="event-label" title="${event.name}">${event.name}</div>
+                        <div class="${eventClass}" 
+                             style="left: ${startOffset}px; width: ${width}px; background: ${color};"${gapClass}
+                             data-event-index="${index}"
+                             onmouseenter="showTooltip(event, ${index})"
+                             onmouseleave="hideTooltip()">
+                            ${durationText}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('timeline-content').innerHTML = html;
+        }
+        
+        function renderLegend() {
+            const usedCategories = [...new Set(events.map(e => e.category))];
+            const legendHtml = usedCategories.map(category => `
+                <div class="legend-item">
+                    <div class="legend-color" style="background: ${colors[category] || colors.DEFAULT}"></div>
+                    <span>${category}</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('legend-container').innerHTML = legendHtml;
+        }
+        
+        function showTooltip(mouseEvent, eventIndex) {
+            const event = filteredEvents[eventIndex];
+            const tooltip = document.getElementById('tooltip');
+            
+            const startTime = event.start.toLocaleTimeString('en-US', {hour12: false});
+            const endTime = event.end.toLocaleTimeString('en-US', {hour12: false});
+            const duration = event.isInstant ? 'Instant' : `${Math.round(event.duration)}ms`;
+            
+            let tooltipContent = `
+                <strong>${event.name}</strong><br>
+                Start: ${startTime}<br>
+                ${event.isInstant ? '' : `End: ${endTime}<br>`}
+                Duration: ${duration}
+            `;
+            
+            if (event.isGap) {
+                tooltipContent += `<br><br><em>⚠️  This is an untracked time period</em>`;
+            }
+            
+            tooltip.innerHTML = tooltipContent;
+            tooltip.style.left = mouseEvent.pageX + 10 + 'px';
+            tooltip.style.top = mouseEvent.pageY - 10 + 'px';
+            tooltip.classList.add('show');
+        }
+        
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('show');
+        }
+        
+        function showError(message) {
+            document.getElementById('error-container').innerHTML = `<div class="error">${message}</div>`;
+        }
+        
+        function clearError() {
+            document.getElementById('error-container').innerHTML = '';
+        }
+        
+        async function loadDefaultLog() {
+            try {
+                const response = await fetch('run-with-session-timing.log');
+                if (!response.ok) throw new Error('Could not load run-with-session-timing.log file');
+                const content = await response.text();
+                parseLogFile(content);
+                clearError();
+            } catch (error) {
+                showError('Could not load run-with-session-timing.log file. Please select the file manually.');
+            }
+        }
+        
+        // Try to load default log on page load
+        window.addEventListener('load', loadDefaultLog);
+
+        function loadGapData(data) {
+            gapData = data;
+            sessionStart = new Date(data.sessionStart);
+            sessionEnd = new Date(data.sessionEnd);
+            
+            // Load events from gap analysis
+            events = data.events.map(event => ({
+                ...event,
+                start: new Date(event.start),
+                end: new Date(event.end),
+                category: getEventCategory(event.name)
+            }));
+            
+            // Add gaps as events
+            data.gaps.forEach((gap, index) => {
+                events.push({
+                    name: `GAP_${index + 1}`,
+                    start: new Date(gap.start),
+                    end: new Date(gap.end),
+                    duration: gap.duration,
+                    category: 'GAP',
+                    isGap: true
+                });
+            });
+            
+            events.sort((a, b) => a.start - b.start);
+            timelineStart = sessionStart;
+            timelineEnd = sessionEnd;
+            
+            applyFilters();
+            updateStats();
+            renderTimeline();
+            renderLegend();
+            clearError();
+            
+            // Show summary
+            const coverage = data.metadata.coveragePercentage.toFixed(1);
+            const gapCount = data.gaps.length;
+            const gapTime = (data.metadata.totalGapTime / 1000).toFixed(2);
+            document.getElementById('timeline-content').innerHTML = 
+                `<div style="padding: 15px; background: #e8f5e8; border-radius: 6px; margin-bottom: 20px;">
+                    <strong>Gap Analysis Loaded:</strong> ${coverage}% coverage, ${gapCount} gaps found, ${gapTime}s total gap time
+                </div>` + document.getElementById('timeline-content').innerHTML;
+        }
+
+        // Event listeners
+        document.getElementById('logFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        parseLogFile(e.target.result);
+                        clearError();
+                    } catch (error) {
+                        showError('Error parsing log file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+        
+        document.getElementById('gapFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        loadGapData(data);
+                        clearError();
+                    } catch (error) {
+                        showError('Error parsing gap analysis file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+        
+        document.getElementById('eventFilter').addEventListener('input', () => {
+            applyFilters();
+            renderTimeline();
+        });
+        
+        document.getElementById('categoryFilter').addEventListener('change', () => {
+            applyFilters();
+            renderTimeline();
+        });
+        
+        document.getElementById('showInstantEvents').addEventListener('change', () => {
+            applyFilters();
+            renderTimeline();
+        });
+        
+        document.getElementById('showGaps').addEventListener('change', () => {
+            applyFilters();
+            renderTimeline();
+        });
+    </script>
+</body>
+</html>

@@ -13,6 +13,7 @@ describe('BStack\'s Cart Functionality', async function() {
   var driver;
 
   before(function() {
+    console.log(`PERFORMANCE EVENT ENDED: SDK:ACTUALTESTSTART AT ${new Date().toISOString()}`);
     driver = buildDriver();
   });
 
