@@ -45,23 +45,33 @@ describe('BStack\'s Cart Functionality', async function() {
     let samsungVendor = await driver.findElement(By.xpath('//input[@value="Samsung"]/parent::*'));
     await samsungVendor.click();
     
-    // Not waiting for Samsung filter to apply - this will cause issues
+    // Wait for Samsung devices to be shown after filtering
+    await driver.wait(until.elementLocated(By.xpath('//p[contains(text(), "Galaxy")]')), 5000);
     
-    // Search for iPhone by typing in search box
+    // Check if filtering is working and first product is Samsung
+    let firstSamsungProduct = await driver.findElement(By.xpath('//p[contains(text(), "Galaxy")]'));
+    let firstSamsungProductName = await firstSamsungProduct.getText();
+    assert(firstSamsungProductName.toLowerCase().includes('galaxy'), `Expected first device to be Galaxy, but found: "${firstSamsungProductName}"`);
+        
+    // Search for iPhone by typing in search box and by entering enter key
     let searchInput = await driver.findElement(By.css('input[placeholder*="Search"]'));
     await searchInput.clear();
     await searchInput.sendKeys('iPhone');
+    await searchInput.sendKeys('\n');
     
-    // Click the search button (not using Enter)
-    let searchButton = await driver.findElement(By.xpath('//button[contains(., "Search")]'));
-    await searchButton.click();
+    // Wait for search results to load
+    await driver.sleep(2000);
     
-    // Check first product in search results
-    let firstProduct = await driver.findElement(By.css('[class*="shelf-item"]:first-child p'));
+    // Check results
+    let searchResults = await driver.findElements(By.xpath('//p[text()!=""]'));
+    let searchResultCount = searchResults.length;
+
+    // Find first product
+    let firstProduct = await driver.findElement(By.xpath('(//p[text()!=""])[1]'));
     let firstProductName = await firstProduct.getText();
-    
-    // This will fail because we're checking before search results load
-    assert(firstProductName.toLowerCase().includes('iphone'), `Expected first device to be iPhone, but found: ${firstProductName}`);
+      
+    assert(firstProductName.toLowerCase().includes('iphone'), `Expected first device to be iPhone, but found: "${firstProductName}"`);
+    assert(searchResultCount > 0, `Expected search results for iPhone, but found ${searchResultCount} results`);
   });
 
   after(async function() {

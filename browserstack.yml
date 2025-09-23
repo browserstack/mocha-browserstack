@@ -11,9 +11,9 @@ accessKey: YOUR_ACCESS_KEY
 # ======================
 # The following capabilities are used to set up reporting on BrowserStack:
 # Set 'projectName' to the name of your project. Example, Marketing Website
-projectName: BrowserStack Test Failure Agent Sample
+projectName: BrowserStack Test Failure Agent Demo
 # Set `buildName` as the name of the job / testsuite being run
-buildName: TFA agent sample
+buildName: TFA Agent Sample build
 # `buildIdentifier` is a unique id to differentiate every execution that gets appended to
 # buildName. Choose your buildIdentifier format from the available expressions:
 # ${BUILD_NUMBER} (Default): Generates an incremental counter with every execution
@@ -33,13 +33,6 @@ platforms:
     osVersion: Big Sur
     browserName: Chrome
     browserVersion: latest
-  - os: Windows
-    osVersion: 10
-    browserName: Edge
-    browserVersion: latest
-  - deviceName: Samsung Galaxy S22 Ultra
-    browserName: chrome # Try 'samsung' for Samsung browser
-    osVersion: 12.0
 
 # =======================
 # Parallels per Platform
