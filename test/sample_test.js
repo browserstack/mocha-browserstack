@@ -36,6 +36,34 @@ describe('BStack\'s Cart Functionality', async function() {
     assert(productText === productCartText);
   });
 
+  it('can search for products', async function () {
+    await driver.get('https://bstackdemo.com/');
+    await driver.wait(until.titleMatches(/StackDemo/i), 10000);
+    
+    // Click on Samsung vendor area to show Samsung devices first
+    await driver.wait(until.elementLocated(By.xpath('//input[@value="Samsung"]/parent::*')));
+    let samsungVendor = await driver.findElement(By.xpath('//input[@value="Samsung"]/parent::*'));
+    await samsungVendor.click();
+    
+    // Not waiting for Samsung filter to apply - this will cause issues
+    
+    // Search for iPhone by typing in search box
+    let searchInput = await driver.findElement(By.css('input[placeholder*="Search"]'));
+    await searchInput.clear();
+    await searchInput.sendKeys('iPhone');
+    
+    // Click the search button (not using Enter)
+    let searchButton = await driver.findElement(By.xpath('//button[contains(., "Search")]'));
+    await searchButton.click();
+    
+    // Check first product in search results
+    let firstProduct = await driver.findElement(By.css('[class*="shelf-item"]:first-child p'));
+    let firstProductName = await firstProduct.getText();
+    
+    // This will fail because we're checking before search results load
+    assert(firstProductName.toLowerCase().includes('iphone'), `Expected first device to be iPhone, but found: ${firstProductName}`);
+  });
+
   after(async function() {
     await driver.quit();
   });
