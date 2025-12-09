@@ -50,7 +50,7 @@ platforms:
 # Example 1 - If you have configured 3 platforms and set `parallelsPerPlatform` as 2, a total of 6 (2 * 3) parallel threads will be used on BrowserStack
 #
 # Example 2 - If you have configured 1 platform and set `parallelsPerPlatform` as 5, a total of 5 (1 * 5) parallel threads will be used on BrowserStack
-parallelsPerPlatform: 1
+parallelsPerPlatform: 2
 
 # ==========================================
 # BrowserStack Local
@@ -77,3 +77,4 @@ consoleLogs: errors # <string> Remote browser's console debug levels to be print
 # Test Observability is an intelligent test reporting & debugging product. It collects data using the SDK. Read more about what data is collected at https://www.browserstack.com/docs/test-observability/references/terms-and-conditions
 # Visit observability.browserstack.com to see your test reports and insights. To disable test observability, specify `testObservability: false` in the key below.
 testObservability: true
+CUSTOM_TAG_1: bstack_sample
